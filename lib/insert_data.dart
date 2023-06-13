@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'database_instance.dart';
+
 import 'package:simple_markdown_editor/simple_markdown_editor.dart';
 
 class InsertData extends StatefulWidget {
@@ -22,6 +24,10 @@ class _InsertDataState extends State<InsertData> {
 
   @override
   Widget build(BuildContext context) {
+    var dt = DateTime.now().toLocal();
+    var newFormat = DateFormat("HH:mm");
+    String updatedDt = newFormat.format(dt);
+
     print(descriptionText);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -59,8 +65,14 @@ class _InsertDataState extends State<InsertData> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         backgroundColor: Color.fromARGB(255, 62, 119, 111)),
-                    onPressed: () {
-                      print(descriptionText);
+                    onPressed: () async {
+                      await databasesInstance.insert({
+                        'title': tittleText.text,
+                        'description': descriptionText.text,
+                        'create_at': updatedDt.toString(),
+                        'update_at': updatedDt.toString()
+                      });
+                      Navigator.pop(context);
                     },
                     child: Text(
                       'Add',

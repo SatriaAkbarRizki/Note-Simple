@@ -54,38 +54,27 @@ class MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0X0F121212),
+      backgroundColor: const Color(0xFF282a36),
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: Text(
           'Note Simple',
           style: TextStyle(
-              color: Colors.white,
+              color: Color(0xfff8f8f2),
               fontFamily: 'Sarabun',
               fontSize: 20,
               fontWeight: FontWeight.w700),
         ),
         actions: [
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(110, 80),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  backgroundColor: Color.fromARGB(255, 62, 119, 111)),
+          IconButton(
               onPressed: () {
                 Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => InsertData()))
-                    .then((value) {
-                  setState(() {});
-                });
+                        MaterialPageRoute(builder: ((context) => InsertData())))
+                    .then((value) {});
               },
-              child: Text(
-                'Add',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Sarabun',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
+              icon: Icon(
+                Icons.add,
+                color: Color(0xff50fa7b),
               )),
           SizedBox(
             width: 20,
@@ -93,8 +82,8 @@ class MyHomeState extends State<MyHome> {
         ],
       ),
       body: RefreshIndicator(
-          color: Colors.amber,
-          backgroundColor: Colors.white,
+          color: Color(0xff50fa7b),
+          backgroundColor: const Color(0xFF282a36),
           onRefresh: _refreshData,
           child: databasesInstance != null
               ? FutureBuilder(
@@ -106,11 +95,24 @@ class MyHomeState extends State<MyHome> {
                           child: emptyData(),
                         );
                       }
-                      return Center(
-                        child: Text(
-                          'Example',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              hasDataNote(
+                                  snapshot.data![index].title,
+                                  snapshot.data![index].description,
+                                  snapshot.data![index].create_at),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          );
+                        },
                       );
                     } else {
                       return Center(
@@ -150,6 +152,83 @@ class MyHomeState extends State<MyHome> {
               fontWeight: FontWeight.w900),
         )
       ],
+    );
+  }
+
+  Widget hasDataNote(String titile, String description, String create_at) {
+    return Container(
+      height: 160,
+      width: 360,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20), color: Color(0xffBEE3DB)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 12, top: 12, right: 12),
+            child: Text(
+              '${titile}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontFamily: 'Sarabun',
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 12, top: 8, right: 12),
+            child: Text(
+              '${description}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Sarabun',
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 12),
+                child: Text(
+                  '${create_at}',
+                  style: TextStyle(
+                    fontFamily: 'Sarabun',
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 115),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.remove_circle_outlined),
+                ),
+              ),
+              Container(
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.edit_attributes),
+                ),
+              ),
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    color: Color(0xff89B0AE),
+                    borderRadius: BorderRadius.circular(15)),
+                child: IconButton(
+                    onPressed: () {}, icon: Icon(Icons.keyboard_arrow_right)),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
