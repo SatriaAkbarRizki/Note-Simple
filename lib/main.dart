@@ -1,6 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:notesimple/database_instance.dart';
+import 'package:notesimple/datamodel.dart';
+import 'package:notesimple/edit_data.dart';
+import 'package:notesimple/view.data.dart';
 
 import 'insert_data.dart';
 
@@ -96,24 +101,25 @@ class MyHomeState extends State<MyHome> {
                         );
                       }
                       return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              hasDataNote(
-                                  snapshot.data![index].title,
-                                  snapshot.data![index].description,
-                                  snapshot.data![index].create_at),
-                              SizedBox(
-                                height: 20,
-                              )
-                            ],
-                          );
-                        },
-                      );
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                hasDataNote(
+                                    snapshot.data?[index].id,
+                                    snapshot.data![index].title,
+                                    snapshot.data![index].description,
+                                    snapshot.data![index].create_at,
+                                    snapshot.data![index]),
+                                SizedBox(
+                                  height: 20,
+                                )
+                              ],
+                            );
+                          });
                     } else {
                       return Center(
                         child: CircularProgressIndicator(
@@ -155,7 +161,13 @@ class MyHomeState extends State<MyHome> {
     );
   }
 
-  Widget hasDataNote(String titile, String description, String create_at) {
+  Widget hasDataNote(
+    int? id,
+    String titile,
+    String description,
+    String create_at,
+    DataModel dataUser,
+  ) {
     return Container(
       height: 160,
       width: 360,
@@ -176,15 +188,18 @@ class MyHomeState extends State<MyHome> {
                   fontWeight: FontWeight.w700),
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 12, top: 8, right: 12),
-            child: Text(
-              '${description}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontFamily: 'Sarabun',
-                fontSize: 16,
+          SizedBox(
+            height: 46,
+            child: Container(
+              padding: EdgeInsets.only(left: 12, top: 8, right: 12),
+              child: Text(
+                '${description}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: 'Sarabun',
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
@@ -193,27 +208,39 @@ class MyHomeState extends State<MyHome> {
           ),
           Row(
             children: [
-              Container(
-                padding: EdgeInsets.only(left: 12),
-                child: Text(
-                  '${create_at}',
-                  style: TextStyle(
-                    fontFamily: 'Sarabun',
-                    fontSize: 15,
+              SizedBox(
+                width: 83,
+                child: Container(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text(
+                    '${create_at}',
+                    style: TextStyle(
+                      fontFamily: 'Sarabun',
+                      fontSize: 15,
+                    ),
                   ),
                 ),
               ),
               Container(
                 padding: EdgeInsets.only(left: 115),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteItem(id ?? 0);
+                  },
                   icon: Icon(Icons.remove_circle_outlined),
                 ),
               ),
               Container(
                 child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.edit_attributes),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditData(
+                                  dataModel: dataUser,
+                                )));
+                  },
+                  icon: Icon(Icons.edit),
                 ),
               ),
               Container(
@@ -223,7 +250,15 @@ class MyHomeState extends State<MyHome> {
                     color: Color(0xff89B0AE),
                     borderRadius: BorderRadius.circular(15)),
                 child: IconButton(
-                    onPressed: () {}, icon: Icon(Icons.keyboard_arrow_right)),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ViewData(
+                                    dataModel: dataUser,
+                                  )));
+                    },
+                    icon: Icon(Icons.keyboard_arrow_right)),
               )
             ],
           )

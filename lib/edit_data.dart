@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:notesimple/datamodel.dart';
+import 'package:simple_markdown_editor/simple_markdown_editor.dart';
+import 'package:simple_markdown_editor/widgets/markdown_form_field.dart';
+
 import 'database_instance.dart';
 
-import 'package:simple_markdown_editor/simple_markdown_editor.dart';
-
-class InsertData extends StatefulWidget {
-  const InsertData({super.key});
+class EditData extends StatefulWidget {
+  final DataModel? dataModel;
+  const EditData({super.key, this.dataModel});
 
   @override
-  State<InsertData> createState() => _InsertDataState();
+  State<EditData> createState() => _EditDataState();
 }
 
-class _InsertDataState extends State<InsertData> {
+class _EditDataState extends State<EditData> {
   DatabasesInstance databasesInstance = DatabasesInstance();
   TextEditingController tittleText = TextEditingController();
   TextEditingController descriptionText = TextEditingController();
@@ -19,6 +22,8 @@ class _InsertDataState extends State<InsertData> {
   @override
   void initState() {
     databasesInstance.databases();
+    tittleText.text = widget.dataModel!.title ?? '';
+    descriptionText.text = widget.dataModel!.description ?? '';
     super.initState();
   }
 
@@ -59,11 +64,10 @@ class _InsertDataState extends State<InsertData> {
                 padding: EdgeInsets.only(left: 5),
                 child: IconButton(
                     onPressed: () async {
-                      await databasesInstance.insert({
+                      await databasesInstance.update(widget.dataModel!.id!, {
                         'title': tittleText.text,
                         'description': descriptionText.text,
-                        'create_at': updatedDt.toString(),
-                        'update_at': updatedDt.toString()
+                        'create_at': updatedDt.toString()
                       });
                       Navigator.pop(context);
                       setState(() {});
@@ -94,17 +98,11 @@ class _InsertDataState extends State<InsertData> {
             padding: EdgeInsets.only(left: 15),
             controller: descriptionText,
             emojiConvert: true,
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Sarabun',
-                backgroundColor: Colors.white),
+            style:
+                TextStyle(fontFamily: 'Sarabun', backgroundColor: Colors.white),
           )
         ],
       ),
     );
   }
-
-  // Widget writingNote(){
-
-  // }
 }

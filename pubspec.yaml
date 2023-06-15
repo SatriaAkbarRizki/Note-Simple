@@ -9,11 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_markdown: ^0.6.4
   flutter_svg: ^2.0.6
+  intl: ^0.18.1
+  markdown_editable_textinput: ^2.2.0
   path_provider: ^2.0.15
   simple_markdown_editor: ^0.2.0
   sqflite: ^2.2.8+4
-  intl: ^0.18.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -27,7 +27,7 @@ class DatabasesInstance {
 
   FutureOr _onCreate(Database db, int version) async {
     await db.execute(
-        'create table $nametable(int integer primary key, title text null, description text null, create_at text null, update_at text null)');
+        'create table $nametable(id integer primary key, title text null, description text null, create_at text null, update_at text null)');
   }
 
   Future<List<DataModel>> all() async {
