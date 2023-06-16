@@ -1,24 +1,23 @@
-import 'dart:ffi';
-
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:notesimple/database_instance.dart';
 import 'package:notesimple/datamodel.dart';
 import 'package:notesimple/edit_data.dart';
 import 'package:notesimple/view.data.dart';
-
-import 'insert_data.dart';
+import 'package:notesimple/insert_data.dart';
+import 'package:flutter_gif/flutter_gif.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyHome(),
     );
@@ -26,21 +25,24 @@ class MainApp extends StatelessWidget {
 }
 
 class MyHome extends StatefulWidget {
+  const MyHome({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return MyHomeState();
   }
 }
 
-class MyHomeState extends State<MyHome> {
+class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
   DatabasesInstance? databasesInstance;
+  late FlutterGifController _controller;
 
   Future<void> initDatabases() async {
-    await databasesInstance!.databases();
     setState(() {});
   }
 
   Future<void> _refreshData() async {
+    await databasesInstance != null;
     setState(() {});
   }
 
@@ -53,7 +55,15 @@ class MyHomeState extends State<MyHome> {
   void initState() {
     databasesInstance = DatabasesInstance();
     initDatabases();
+    _controller = FlutterGifController(vsync: this);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,7 +72,7 @@ class MyHomeState extends State<MyHome> {
       backgroundColor: const Color(0xFF282a36),
       appBar: AppBar(
         forceMaterialTransparency: true,
-        title: Text(
+        title: const Text(
           'Note Simple',
           style: TextStyle(
               color: Color(0xfff8f8f2),
@@ -73,29 +83,29 @@ class MyHomeState extends State<MyHome> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                        MaterialPageRoute(builder: ((context) => InsertData())))
-                    .then((value) {});
+                context.pushTransparentRoute(const InsertData()).then((value) {
+                  setState(() {});
+                });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.add,
                 color: Color(0xff50fa7b),
               )),
-          SizedBox(
+          const SizedBox(
             width: 20,
           )
         ],
       ),
       body: RefreshIndicator(
-          color: Color(0xff50fa7b),
+          color: const Color(0xff50fa7b),
           backgroundColor: const Color(0xFF282a36),
           onRefresh: _refreshData,
           child: databasesInstance != null
-              ? FutureBuilder(
+              ? FutureBuilder<List<DataModel>?>(
                   future: databasesInstance!.all(),
                   builder: ((context, snapshot) {
                     if (snapshot.hasData) {
-                      if (snapshot.data!.length == 0) {
+                      if (snapshot.data!.isEmpty) {
                         return Center(
                           child: emptyData(),
                         );
@@ -105,7 +115,7 @@ class MyHomeState extends State<MyHome> {
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 hasDataNote(
@@ -114,21 +124,21 @@ class MyHomeState extends State<MyHome> {
                                     snapshot.data![index].description,
                                     snapshot.data![index].create_at,
                                     snapshot.data![index]),
-                                SizedBox(
+                                const SizedBox(
                                   height: 20,
                                 )
                               ],
                             );
                           });
                     } else {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(
                           color: Colors.amber,
                         ),
                       );
                     }
                   }))
-              : Center(
+              : const Center(
                   child: Text(
                     'Not Have Data',
                     style: TextStyle(color: Colors.white),
@@ -138,26 +148,30 @@ class MyHomeState extends State<MyHome> {
   }
 
   Widget emptyData() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(
-          'assets/images/writing.png',
-          height: 280,
-          width: 280,
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          'Writing Now',
-          style: TextStyle(
-              color: Color.fromARGB(255, 231, 233, 232),
-              fontFamily: 'Sarabun',
-              fontSize: 28,
-              fontWeight: FontWeight.w900),
-        )
-      ],
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 100,
+          ),
+          Container(
+            padding: EdgeInsets.all(20),
+            child: SvgPicture.asset(
+              'assets/images/writing.svg',
+              width: 400,
+            ),
+          ),
+          Text(
+            'Writing Now',
+            style: TextStyle(
+                color: Color.fromARGB(255, 231, 233, 232),
+                fontFamily: 'Sarabun',
+                fontSize: 28,
+                fontWeight: FontWeight.w900),
+          )
+        ],
+      ),
     );
   }
 
@@ -165,24 +179,25 @@ class MyHomeState extends State<MyHome> {
     int? id,
     String titile,
     String description,
-    String create_at,
+    String createAt,
     DataModel dataUser,
   ) {
     return Container(
       height: 160,
       width: 360,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Color(0xffBEE3DB)),
+          borderRadius: BorderRadius.circular(20),
+          color: const Color(0xffBEE3DB)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 12, top: 12, right: 12),
+            padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
             child: Text(
-              '${titile}',
+              titile,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: const TextStyle(
                   fontFamily: 'Sarabun',
                   fontSize: 28,
                   fontWeight: FontWeight.w700),
@@ -191,19 +206,19 @@ class MyHomeState extends State<MyHome> {
           SizedBox(
             height: 46,
             child: Container(
-              padding: EdgeInsets.only(left: 12, top: 8, right: 12),
+              padding: const EdgeInsets.only(left: 12, top: 8, right: 12),
               child: Text(
-                '${description}',
+                description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Sarabun',
                   fontSize: 16,
                 ),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
@@ -211,10 +226,10 @@ class MyHomeState extends State<MyHome> {
               SizedBox(
                 width: 83,
                 child: Container(
-                  padding: EdgeInsets.only(left: 12),
+                  padding: const EdgeInsets.only(left: 12),
                   child: Text(
-                    '${create_at}',
-                    style: TextStyle(
+                    createAt,
+                    style: const TextStyle(
                       fontFamily: 'Sarabun',
                       fontSize: 15,
                     ),
@@ -222,43 +237,41 @@ class MyHomeState extends State<MyHome> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(left: 115),
+                padding: const EdgeInsets.only(left: 115),
                 child: IconButton(
                   onPressed: () {
                     deleteItem(id ?? 0);
                   },
-                  icon: Icon(Icons.remove_circle_outlined),
+                  icon: const Icon(Icons.remove_circle_outlined),
                 ),
               ),
               Container(
                 child: IconButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditData(
-                                  dataModel: dataUser,
-                                )));
+                    context.pushTransparentRoute(
+                        transitionDuration: const Duration(seconds: 1),
+                        EditData(
+                          dataModel: dataUser,
+                        ));
                   },
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                 ),
               ),
               Container(
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: Color(0xff89B0AE),
+                    color: const Color(0xff89B0AE),
                     borderRadius: BorderRadius.circular(15)),
                 child: IconButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ViewData(
-                                    dataModel: dataUser,
-                                  )));
+                      context.pushTransparentRoute(
+                          transitionDuration: const Duration(seconds: 1),
+                          ViewData(
+                            dataModel: dataUser,
+                          ));
                     },
-                    icon: Icon(Icons.keyboard_arrow_right)),
+                    icon: const Icon(Icons.keyboard_arrow_right)),
               )
             ],
           )

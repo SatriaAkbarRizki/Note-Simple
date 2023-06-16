@@ -7,15 +7,18 @@ environment:
   sdk: '>=3.0.3 <4.0.0'
 
 dependencies:
+  animated_icon_button: ^1.0.2
+  dismissible_page: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_icon_snackbar: ^1.1.4
   flutter_markdown: ^0.6.4
+  flutter_quill: ^7.2.6
   flutter_svg: ^2.0.6
   intl: ^0.18.1
-  markdown_editable_textinput: ^2.2.0
   path_provider: ^2.0.15
-  simple_markdown_editor: ^0.2.0
   sqflite: ^2.2.8+4
+  flutter_gif: ^0.0.4
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -25,7 +28,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/writing.png
+    - assets/images/writing.svg
 
   fonts:
     - family: Sarabun
