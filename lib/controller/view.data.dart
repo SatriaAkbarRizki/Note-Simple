@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:notesimple/datamodel.dart';
+import 'package:notesimple/model/database_instance.dart';
+import 'package:notesimple/model/datamodel.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 
-import 'database_instance.dart';
-
-class EditData extends StatefulWidget {
+class ViewData extends StatefulWidget {
   final DataModel? dataModel;
-  const EditData({super.key, this.dataModel});
+  const ViewData({super.key, this.dataModel});
 
   @override
-  State<EditData> createState() => _EditDataState();
+  State<ViewData> createState() => _ViewDataState();
 }
 
-class _EditDataState extends State<EditData> {
+class _ViewDataState extends State<ViewData> {
   DatabasesInstance databasesInstance = DatabasesInstance();
   TextEditingController tittleText = TextEditingController();
   TextEditingController descriptionText = TextEditingController();
@@ -28,14 +26,10 @@ class _EditDataState extends State<EditData> {
 
   @override
   Widget build(BuildContext context) {
-    var dt = DateTime.now().toLocal();
-    var newFormat = DateFormat("HH:mm");
-    String updatedDt = newFormat.format(dt);
-
     print(descriptionText);
     return DismissiblePage(
         child: Hero(
-            tag: 'edit',
+            tag: 'view',
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: const Color(0xFF282a36),
@@ -75,13 +69,6 @@ class _EditDataState extends State<EditData> {
                         padding: const EdgeInsets.only(left: 5),
                         child: IconButton(
                             onPressed: () async {
-                              await databasesInstance
-                                  .update(widget.dataModel!.id!, {
-                                'title': tittleText.text,
-                                'description': descriptionText.text,
-                                'create_at': updatedDt.toString(),
-                                'update_at': updatedDt.toString()
-                              });
                               Navigator.pop(context);
                               setState(() {});
                             },
@@ -99,6 +86,7 @@ class _EditDataState extends State<EditData> {
                   Container(
                     padding: const EdgeInsets.only(left: 15, right: 16, top: 10),
                     child: TextField(
+                      readOnly: true,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       style: const TextStyle(color: Color(0xffFFFBF5), fontSize: 24),
@@ -113,6 +101,7 @@ class _EditDataState extends State<EditData> {
                   Container(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: TextField(
+                      readOnly: true,
                       style: const TextStyle(color: Color(0xffe9ecef), fontSize: 18),
                       controller: descriptionText,
                       keyboardType: TextInputType.multiline,

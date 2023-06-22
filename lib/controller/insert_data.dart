@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'database_instance.dart';
+import 'package:notesimple/model/database_instance.dart';
 import 'package:icon_animated/icon_animated.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:dismissible_page/dismissible_page.dart';
@@ -26,13 +26,15 @@ class _InsertDataState extends State<InsertData> {
 
   @override
   Widget build(BuildContext context) {
+    final _mediaQuery = MediaQuery.of(context).size;
+
     var dt = DateTime.now().toLocal();
     var newFormat = DateFormat("HH:mm");
     String updatedDt = newFormat.format(dt);
 
-    print(descriptionText);
     return DismissiblePage(
-        child: Scaffold(
+        child: SafeArea(
+            child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: const Color(0xFF282a36),
           appBar: AppBar(
@@ -40,7 +42,7 @@ class _InsertDataState extends State<InsertData> {
             forceMaterialTransparency: true,
             title: Container(
               height: 50,
-              width: 500,
+              width: 500 * _mediaQuery.width,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: const Color.fromARGB(115, 54, 57, 73)),
@@ -55,20 +57,13 @@ class _InsertDataState extends State<InsertData> {
                         icon: const Icon(Icons.arrow_back_ios_new,
                             color: Color(0xff50fa7b))),
                   ),
-                  const SizedBox(
-                    width: 230,
-                  ),
-                  // Container(
-                  //   child: IconButton(
-                  //       onPressed: () {
-                  //         setState(() {
-                  //           tittleText.undo();
-                  //         });
-                  //       },
-                  //       icon: Icon(Icons.undo)),
-                  // ),
+                  Flexible(
+                      flex: 2,
+                      child: SizedBox(
+                        width: 230 * _mediaQuery.width,
+                      )),
                   Container(
-                    padding: const EdgeInsets.only(left: 5),
+                    padding: const EdgeInsets.only(right: 10),
                     child: IconButton(
                         onPressed: () async {
                           if (tittleText.text.isEmpty &&
@@ -139,7 +134,7 @@ class _InsertDataState extends State<InsertData> {
               )
             ],
           ),
-        ),
+        )),
         onDismissed: () {
           Navigator.pop(context);
         });
