@@ -72,7 +72,8 @@ class _InsertDataState extends State<InsertData> {
                                 context: context,
                                 label: 'Masukkan data yang kosong',
                                 snackBarType: SnackBarType.fail);
-                          } else {
+                          } else if (tittleText.text.isNotEmpty &&
+                              descriptionText.text.isNotEmpty) {
                             await databasesInstance.insert(
                               {
                                 'title': tittleText.text,
@@ -87,6 +88,11 @@ class _InsertDataState extends State<InsertData> {
                                 context: context,
                                 label: 'save',
                                 snackBarType: SnackBarType.save);
+                          } else {
+                            IconSnackBar.show(
+                                context: context,
+                                label: 'Masukkan data yang kosong',
+                                snackBarType: SnackBarType.fail);
                           }
                           ;
                         },

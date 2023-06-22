@@ -26,6 +26,7 @@ class _ViewDataState extends State<ViewData> {
 
   @override
   Widget build(BuildContext context) {
+    final _mediaQuery = MediaQuery.of(context).size;
     print(descriptionText);
     return DismissiblePage(
         child: Hero(
@@ -38,7 +39,7 @@ class _ViewDataState extends State<ViewData> {
                 forceMaterialTransparency: true,
                 title: Container(
                   height: 50,
-                  width: 500,
+                  width: 500 * _mediaQuery.width,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       color: const Color.fromARGB(115, 54, 57, 73)),
@@ -53,18 +54,11 @@ class _ViewDataState extends State<ViewData> {
                             icon: const Icon(Icons.arrow_back_ios_new,
                                 color: Color(0xff50fa7b))),
                       ),
-                      const SizedBox(
-                        width: 230,
-                      ),
-                      // Container(
-                      //   child: IconButton(
-                      //       onPressed: () {
-                      //         setState(() {
-                      //           tittleText.undo();
-                      //         });
-                      //       },
-                      //       icon: Icon(Icons.undo)),
-                      // ),
+                      Flexible(
+                          flex: 2,
+                          child: SizedBox(
+                            width: 230 * _mediaQuery.width,
+                          )),
                       Container(
                         padding: const EdgeInsets.only(left: 5),
                         child: IconButton(
@@ -84,12 +78,14 @@ class _ViewDataState extends State<ViewData> {
               body: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 15, right: 16, top: 10),
+                    padding:
+                        const EdgeInsets.only(left: 15, right: 16, top: 10),
                     child: TextField(
                       readOnly: true,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
-                      style: const TextStyle(color: Color(0xffFFFBF5), fontSize: 24),
+                      style: const TextStyle(
+                          color: Color(0xffFFFBF5), fontSize: 24),
                       decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Title',
@@ -102,7 +98,8 @@ class _ViewDataState extends State<ViewData> {
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: TextField(
                       readOnly: true,
-                      style: const TextStyle(color: Color(0xffe9ecef), fontSize: 18),
+                      style: const TextStyle(
+                          color: Color(0xffe9ecef), fontSize: 18),
                       controller: descriptionText,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
