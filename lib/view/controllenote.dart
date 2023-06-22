@@ -166,7 +166,7 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
     final _mediaQuery = MediaQuery.of(context).size;
     return Container(
       height: 160,
-      width: 300 * _mediaQuery.width, // Not Fix
+      width: _mediaQuery.width / 1.1, // Not Fix
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: const Color(0xffBEE3DB)),
@@ -204,11 +204,11 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
             height: 10,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(
-                width: 83,
+              Expanded(
                 child: Container(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: const EdgeInsets.only(left: 10),
                   child: Text(
                     createAt,
                     style: const TextStyle(
@@ -219,7 +219,6 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(left: 115),
                 child: IconButton(
                   onPressed: () {
                     deleteItem(id ?? 0);
@@ -241,7 +240,7 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
               ),
               Container(
                 height: 50,
-                width: 50,
+                margin: EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
                     color: const Color(0xff89B0AE),
                     borderRadius: BorderRadius.circular(15)),
