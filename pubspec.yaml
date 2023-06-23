@@ -29,8 +29,12 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/writing.svg
+    - assets/images/notfound.svg
 
   fonts:
     - family: Sarabun
       fonts:
         - asset: assets/fonts/sarabun/Sarabun-Regular.ttf
+    - family: lufga
+      fonts:
+        - asset: assets/fonts/lufga/lufga-regular.otf
