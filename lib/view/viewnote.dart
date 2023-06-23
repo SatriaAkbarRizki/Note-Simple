@@ -56,14 +56,6 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
       backgroundColor: const Color(0xFF282a36),
       appBar: AppBar(
         forceMaterialTransparency: true,
-        title: const Text(
-          'Note Simple',
-          style: TextStyle(
-              color: Color(0xfff8f8f2),
-              fontFamily: 'Sarabun',
-              fontSize: 20,
-              fontWeight: FontWeight.w700),
-        ),
         actions: [
           IconButton(
               onPressed: () {
@@ -84,77 +76,107 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
           color: const Color(0xff50fa7b),
           backgroundColor: const Color(0xFF282a36),
           onRefresh: _refreshData,
-          child: databasesInstance != null
-              ? FutureBuilder<List<DataModel>?>(
-                  future: databasesInstance!.all(),
-                  builder: ((context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data!.isEmpty) {
-                        return Center(
-                          child: emptyData(),
-                        );
-                      }
-                      return SafeArea(
-                          child: ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    hasDataNote(
-                                        snapshot.data?[index].id,
-                                        snapshot.data![index].title,
-                                        snapshot.data![index].description,
-                                        snapshot.data![index].create_at,
-                                        snapshot.data![index],
-                                        context),
-                                    SizedBox(
-                                      height: 20,
-                                    )
-                                  ],
-                                );
-                              }));
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.amber,
-                        ),
-                      );
-                    }
-                  }))
-              : const Center(
-                  child: Text(
-                    'Not Have Data',
-                    style: TextStyle(color: Colors.white),
+          child: ListView(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(
+                      'My',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'lufga',
+                          fontSize: 55),
+                    ),
                   ),
-                )),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Notes',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'lufga',
+                          fontSize: 50),
+                    ),
+                  ),
+                  databasesInstance != null
+                      ? FutureBuilder<List<DataModel>?>(
+                          future: databasesInstance!.all(),
+                          builder: ((context, snapshot) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data!.isEmpty) {
+                                return Center(
+                                  child: emptyData(),
+                                );
+                              }
+                              return ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        hasDataNote(
+                                            snapshot.data?[index].id,
+                                            snapshot.data![index].title,
+                                            snapshot.data![index].description,
+                                            snapshot.data![index].create_at,
+                                            snapshot.data![index],
+                                            context),
+                                        SizedBox(
+                                          height: 20,
+                                        )
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.amber,
+                                ),
+                              );
+                            }
+                          }))
+                      : const Center(
+                          child: Text(
+                            'Not Have Data',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
+                ],
+              )
+            ],
+          )),
     );
   }
 
   Widget emptyData() {
     return Container(
+      margin: EdgeInsets.only(bottom: 30),
+      padding: EdgeInsets.only(left: 10, top: 10, right: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            height: 100,
-          ),
           Container(
-            padding: EdgeInsets.all(20),
             child: SvgPicture.asset(
-              'assets/images/writing.svg',
+              'assets/images/notfound.svg',
+              height: 300,
               width: 400,
             ),
           ),
           Text(
-            'Writing Now',
+            'no records here',
             style: TextStyle(
                 color: Color.fromARGB(255, 231, 233, 232),
                 fontFamily: 'Sarabun',
-                fontSize: 28,
-                fontWeight: FontWeight.w900),
+                fontSize: 22,
+                fontWeight: FontWeight.w500),
           )
         ],
       ),
