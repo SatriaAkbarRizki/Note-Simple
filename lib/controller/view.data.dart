@@ -30,7 +30,7 @@ class _ViewDataState extends State<ViewData> {
     print(descriptionText);
     return DismissiblePage(
         child: Hero(
-            tag: 'view',
+            tag: Text('View'),
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               backgroundColor: const Color(0xFF282a36),

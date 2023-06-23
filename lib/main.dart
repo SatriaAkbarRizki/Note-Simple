@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notesimple/view/controllenote.dart';
+import 'package:notesimple/view/viewnote.dart';
 
 
 void main() {

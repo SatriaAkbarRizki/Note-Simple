@@ -37,7 +37,7 @@ class _EditDataState extends State<EditData> {
     return DismissiblePage(
         child: SafeArea(
             child: Hero(
-                tag: 'edit',
+                tag: Text('edit'),
                 child: Scaffold(
                   resizeToAvoidBottomInset: false,
                   backgroundColor: const Color(0xFF282a36),

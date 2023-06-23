@@ -5,7 +5,7 @@ import 'package:notesimple/model/datamodel.dart';
 import 'package:notesimple/controller/edit_data.dart';
 import 'package:notesimple/controller/insert_data.dart';
 import 'package:notesimple/controller/view.data.dart';
-import 'package:flutter_gif/flutter_gif.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MyHome extends StatefulWidget {
@@ -19,7 +19,6 @@ class MyHome extends StatefulWidget {
 
 class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
   DatabasesInstance? databasesInstance;
-  late FlutterGifController _controller;
 
   Future<void> initDatabases() async {
     setState(() {});
@@ -39,14 +38,12 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
   void initState() {
     databasesInstance = DatabasesInstance();
     initDatabases();
-    _controller = FlutterGifController(vsync: this);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
@@ -57,16 +54,18 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
       appBar: AppBar(
         forceMaterialTransparency: true,
         actions: [
-          IconButton(
+          Hero(tag: Text('insert'), child: IconButton(
               onPressed: () {
-                context.pushTransparentRoute(const InsertData()).then((value) {
+                context.pushTransparentRoute(
+                          transitionDuration: const Duration(milliseconds: 600),
+                   InsertData()).then((value) {
                   setState(() {});
                 });
               },
               icon: const Icon(
                 Icons.add,
                 color: Color(0xff50fa7b),
-              )),
+              ))),
           const SizedBox(
             width: 20,
           )
@@ -117,28 +116,36 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
                                   shrinkWrap: true,
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        hasDataNote(
-                                            snapshot.data?[index].id,
-                                            snapshot.data![index].title,
-                                            snapshot.data![index].description,
-                                            snapshot.data![index].create_at,
-                                            snapshot.data![index],
-                                            context),
-                                        SizedBox(
-                                          height: 20,
-                                        )
-                                      ],
-                                    );
+                                    return AnimationConfiguration.staggeredList(
+                                        position: index,
+                                        duration: Duration(seconds: 2),
+                                        child: FadeInAnimation(
+                                            child: Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            hasDataNote(
+                                                snapshot.data?[index].id,
+                                                snapshot.data![index].title,
+                                                snapshot
+                                                    .data![index].description,
+                                                snapshot.data![index].create_at,
+                                                snapshot.data![index],
+                                                context),
+                                            SizedBox(
+                                              height: 20,
+                                            )
+                                          ],
+                                        )));
                                   });
                             } else {
                               return const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.amber,
+                                child: SizedBox(
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.amber,
+                                  ),
                                 ),
                               );
                             }
@@ -249,15 +256,18 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
                 ),
               ),
               Container(
-                child: IconButton(
-                  onPressed: () {
-                    context.pushTransparentRoute(
-                        transitionDuration: const Duration(seconds: 1),
-                        EditData(
-                          dataModel: dataUser,
-                        ));
-                  },
-                  icon: const Icon(Icons.edit),
+                child: Hero(
+                  tag: Text('edit'),
+                  child: IconButton(
+                    onPressed: () {
+                      context.pushTransparentRoute(
+                          transitionDuration: const Duration(milliseconds: 600),
+                          EditData(
+                            dataModel: dataUser,
+                          ));
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
                 ),
               ),
               Container(
@@ -266,15 +276,18 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
                 decoration: BoxDecoration(
                     color: const Color(0xff89B0AE),
                     borderRadius: BorderRadius.circular(15)),
-                child: IconButton(
-                    onPressed: () {
-                      context.pushTransparentRoute(
-                          transitionDuration: const Duration(seconds: 1),
-                          ViewData(
-                            dataModel: dataUser,
-                          ));
-                    },
-                    icon: const Icon(Icons.keyboard_arrow_right)),
+                child: Hero(
+                    tag: Text('View'),
+                    child: IconButton(
+                        onPressed: () {
+                          context.pushTransparentRoute(
+                              transitionDuration:
+                                  const Duration(milliseconds: 600),
+                              ViewData(
+                                dataModel: dataUser,
+                              ));
+                        },
+                        icon: const Icon(Icons.keyboard_arrow_right))),
               )
             ],
           )
