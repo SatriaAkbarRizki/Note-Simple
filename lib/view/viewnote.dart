@@ -5,6 +5,7 @@ import 'package:notesimple/model/datamodel.dart';
 import 'package:notesimple/controller/edit_data.dart';
 import 'package:notesimple/controller/insert_data.dart';
 import 'package:notesimple/controller/view.data.dart';
+import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -54,18 +55,23 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
       appBar: AppBar(
         forceMaterialTransparency: true,
         actions: [
-          Hero(tag: Text('insert'), child: IconButton(
-              onPressed: () {
-                context.pushTransparentRoute(
-                          transitionDuration: const Duration(milliseconds: 600),
-                   InsertData()).then((value) {
-                  setState(() {});
-                });
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Color(0xff50fa7b),
-              ))),
+          Hero(
+              tag: Text('go to insert'),
+              child: IconButton(
+                  onPressed: () {
+                    context
+                        .pushTransparentRoute(
+                            transitionDuration:
+                                const Duration(milliseconds: 600),
+                            InsertData())
+                        .then((value) {
+                      setState(() {});
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    color: Color(0xff50fa7b),
+                  ))),
           const SizedBox(
             width: 20,
           )
@@ -260,11 +266,16 @@ class MyHomeState extends State<MyHome> with TickerProviderStateMixin {
                   tag: Text('edit'),
                   child: IconButton(
                     onPressed: () {
-                      context.pushTransparentRoute(
-                          transitionDuration: const Duration(milliseconds: 600),
-                          EditData(
-                            dataModel: dataUser,
-                          ));
+                      context
+                          .pushTransparentRoute(
+                              transitionDuration:
+                                  const Duration(milliseconds: 600),
+                              EditData(
+                                dataModel: dataUser,
+                              ))
+                          .then((value) {
+                        setState(() {});
+                      });
                     },
                     icon: const Icon(Icons.edit),
                   ),
