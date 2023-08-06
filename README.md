@@ -1,6 +1,6 @@
 # Note Simple
-Application note based android use framework flutter, this my first application use sqlite in android.
-applicaion note simple have feature:
+Application note based android use framework flutter, this my first application use sqlite in android. <br /> 
+application note simple have feature:
 - :memo: Write Note
 - :book: Read Note
 - :pencil2: Modify Note
